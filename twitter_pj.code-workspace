@@ -1,0 +1,50 @@
+{
+	"folders": [
+	    {
+		"path": "twitter_pj"
+	    }
+	],
+	"extensions": {
+	    "recommendations": [
+		"ms-python.python",
+		"visualstudioexptteam.vscodeintellicode",
+		"ms-mssql.mssql",
+		"ms-python.vscode-pylance",
+		"ryanluker.vscode-coverage-gutters"
+	    ]
+	},
+	"settings": {
+	    "python.linting.lintOnSave": true,
+	    "python.linting.pylintEnabled": false,
+	    "python.linting.flake8Enabled": true,
+	    "python.linting.flake8Args": [
+		"--max-line-length=88",
+		"--ignore=E203,E266,E501,W503",
+		"--max-complexity=18",
+	    ],
+	    "python.linting.ignorePatterns": [
+		".vscode/*.py",
+		"**/site-packages/**/*.py",
+		".git",
+		"__pycache__",
+		"docs/source/conf.py",
+		"old",
+		"build",
+		"dist",
+		".venv"
+	    ],
+	    "editor.formatOnSave": true,
+	    "python.formatting.provider": "black",
+	    "python.formatting.blackArgs": [],
+	    "editor.codeActionsOnSave": {
+		"source.organizeImports": true
+	    },
+	    "python.sortImports.args": [
+		"--profile=black"
+	    ],
+	    "python.languageServer": "Pylance",
+	    "python.analysis.typeCheckingMode": "basic",
+	    "coverage-gutters.showRulerCoverage": true,
+	    "coverage-gutters.showLineCoverage": true
+	}
+    }

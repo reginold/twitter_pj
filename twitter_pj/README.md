@@ -15,3 +15,8 @@
 - Create the superuser in Django
 `python manage.py createsuperuser` or write the shell script in provision.sh when vagrant up, that will be created automatically.
 
+- Create the account api
+`python manage.py startapp accounts`
+
+- Install the rest framework and config the relative setting.
+You can refer the official [rest framework documentation](https://www.django-rest-framework.org/tutorial/quickstart/) 
