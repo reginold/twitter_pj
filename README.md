@@ -20,3 +20,5 @@
 
 - Install the rest framework and config the relative setting.
 You can refer the official [rest framework documentation](https://www.django-rest-framework.org/tutorial/quickstart/) 
+  - Serializer means the change will be sync on the front rest framework webpage
+  - View mean the data scheme you set on the backend 
