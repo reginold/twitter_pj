@@ -21,4 +21,9 @@
 - Install the rest framework and config the relative setting.
 You can refer the official [rest framework documentation](https://www.django-rest-framework.org/tutorial/quickstart/) 
   - Serializer means the change will be sync on the front rest framework webpage
-  - View mean the data scheme you set on the backend 
+  - View mean the data scheme you set on the backend
+
+- Install the [debug Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+  - You can use the Toolbar to debug the webpage responding and the database query time.
+- Unittest
+  - You can use the unittest to test the code.
