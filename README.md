@@ -25,6 +25,6 @@ You can refer the official [rest framework documentation](https://www.django-res
 
 - Install the [debug Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
   - You can use the Toolbar to debug the webpage responding and the database query time.
-- Unittest
+- Create the Unittest
   - You can use the unittest to test the code.
   - `python manage.py test` will test all the code in the project under the `./${project_folder}`.
