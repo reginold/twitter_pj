@@ -47,3 +47,4 @@ ufw==0.36
 urllib3==1.22
 wrapt==1.13.3
 zope.interface==4.3.2
+django-debug-toolbar==3.2.4
