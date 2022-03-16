@@ -1,10 +1,10 @@
-name: Django CI
+name: Twitter Project CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
