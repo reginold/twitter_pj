@@ -1,6 +1,8 @@
-from crypt import methods
-
-from accounts.api.serializers import LoginSerializer, SignupSerializer, UserSerializer
+from accounts.api.serializers import (
+    LoginSerializer,
+    SignupSerializer,
+    UserSerializer,
+)
 from django.contrib.auth import authenticate as django_authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
