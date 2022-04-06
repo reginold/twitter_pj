@@ -8,16 +8,15 @@ class TweetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tweet
-        fields = "__all__"
+        fields = ("id", "user", "created_at", "content")
 
 
 class TweetSerializerForCreate(serializers.ModelSerializer):
-
     content = serializers.CharField(min_length=6, max_length=140)
 
     class Meta:
         model = Tweet
-        fields = "__all__"
+        fields = ("content",)
 
     def create(self, validated_data):
         user = self.context["request"].user
