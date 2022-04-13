@@ -6,13 +6,14 @@ from tweets.models import Tweet
 
 
 class TweetViewSet(viewsets.GenericViewSet):
+    queryset = Tweet.objects.all()
     serializer_class = TweetSerializerForCreate
 
-    def get_permissons(self):
+    def get_permissions(self):
         # self.action --> (list, create) func
         if self.action == "list":
             return [AllowAny()]
-        return [IsAuthenticated]
+        return [IsAuthenticated()]
 
     def list(self, request):
         if "user_id" not in request.query_params:
