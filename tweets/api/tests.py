@@ -53,7 +53,7 @@ class TweetApiTests(TestCase):
         # fail case : the content length should not be too long
         response = self.user1_client.post(
             TWEET_CREATE_API,
-            {"content": "hello, world, this message is too looooooong"},
+            {"content": "h" * 141},
         )
         self.assertEqual(response.status_code, 400)
 
