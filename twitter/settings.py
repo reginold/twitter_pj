@@ -84,15 +84,15 @@ WSGI_APPLICATION = "twitter.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "django",
-        "USER": "django",
-        "PASSWORD": "django",
-        "HOST": "db",
-        "PORT": 3306,
-        "TEST": {
-            "MIRROR": "default",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': 'django',
+        'HOST': 'db',
+        'PORT': 3306,
+        'TEST': {
+            'MIRROR': "default",
         },
     }
 }
