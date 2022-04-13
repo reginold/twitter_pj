@@ -1,4 +1,4 @@
-name: Twitter Project CI/CD
+name: Django CI
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
