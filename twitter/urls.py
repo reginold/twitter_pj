@@ -18,6 +18,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from friendships.api.views import FriendshipViewSet
+from newsfeeds.api.views import NewsFeedViewSet
 from rest_framework import routers
 from tweets.api.views import TweetViewSet
 
@@ -26,6 +27,7 @@ router.register(r"api/users", UserViewSet)
 router.register(r"api/accounts", AccountViewSet, basename="accounts")
 router.register(r"api/tweets", TweetViewSet, basename="tweets")
 router.register(r"api/friendships", FriendshipViewSet, basename="friendships")
+router.register(r"api/newsfeeds", NewsFeedViewSet, basename="newsfeeds")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
