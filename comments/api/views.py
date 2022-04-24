@@ -1,4 +1,9 @@
-from comments.api.serializers import CommentSerializer, CommentSerializerForCreate
+from comments.api.permissions import IsObjectOwner
+from comments.api.serializers import (
+    CommentSerializer,
+    CommentSerializerForCreate,
+    CommentSerializerForUpdate,
+)
 from comments.models import Comment
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -19,6 +24,8 @@ class CommentViewSet(viewsets.GenericViewSet):
         # 而不是 AllowAny / IsAuthenticated 这样只是一个类名
         if self.action == "create":
             return [IsAuthenticated()]
+        if self.action in ["destroy", "update"]:
+            return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
 
     def create(self, request, *args, **kwargs):
@@ -45,3 +52,31 @@ class CommentViewSet(viewsets.GenericViewSet):
             CommentSerializer(comment).data,
             status=status.HTTP_201_CREATED,
         )
+
+    def update(self, request, *args, **kwargs):
+        comment = self.get_object()
+        serializer = CommentSerializerForUpdate(
+            instance=comment,
+            data=request.data,
+        )
+        if not serializer.is_valid():
+            return Response(
+                {
+                    "message": "Please check input",
+                    "errors": serializer.errors,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        # save will trigger the serializer update method
+        comment = serializer.save()
+        return Response(
+            CommentSerializer(comment).data,
+            status=status.HTTP_200_OK,
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        comment = self.get_object()
+        comment.delete()
+        # DRF 里默认 destroy 返回的是 status code = 204 no content
+        # 这里 return 了 success=True 更直观的让前端去做判断，所以 return 200 更合适
+        return Response({"success": True}, status=status.HTTP_200_OK)
