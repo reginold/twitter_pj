@@ -25,8 +25,6 @@ SECRET_KEY = "#)1r*u^)jds(z5=l7w^$62i45*bn013#lmz9b!i0=06u!$#58o"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "192.168.56.0", "localhost"]
-
 
 # Application definition
 
@@ -39,13 +37,19 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "debug_toolbar",
+    "django_filters",
+    "core",
     "tweets",
     "friendships",
-    "core",
+    "newsfeeds",
+    "comments",
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
     "PAGE_SIZE": 10,
 }
 
@@ -136,3 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+
+try:
+    from .local_settings import *
+except:
+    pass
