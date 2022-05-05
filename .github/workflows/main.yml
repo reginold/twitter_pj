@@ -27,4 +27,4 @@ jobs:
           pip install docker-compose
       - name: Run Tests
         run: |
-          docker-compose run web sh -c "python3 manage.py wait_for_db && python3 manage.py test"
+          docker-compose run web sh -c "python3 manage.py wait_for_db && sleep 30s && python3 manage.py test"
