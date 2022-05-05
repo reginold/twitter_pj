@@ -8,7 +8,12 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6]
 
     steps:
       - uses: actions/checkout@v2
@@ -18,8 +23,10 @@ jobs:
           python-version: 3.6
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          sudo apt-get install -y libmysqlclient-dev gcc libmariadb-dev python3-pip
+          python3 -m pip install --upgrade pip
+          pip3 install docker-compose
+          pip3 install -r requirements.txt
       - name: Run Tests
         run: |
-          python manage.py test
+          docker-compose run web sh -c "python3 manage.py wait_for_db && python3 manage.py test"
