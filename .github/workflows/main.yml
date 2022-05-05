@@ -23,7 +23,7 @@ jobs:
           python-version: 3.6
       - name: Install Dependencies
         run: |
-          sudo apt-get install -y mysql-server default-libmysqlclient-dev gcc libmariadb-dev
+          sudo apt-get install -y mysql-server gcc libmariadb-dev
           pip install docker-compose
       - name: Run Tests
         run: |
