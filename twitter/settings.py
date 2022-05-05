@@ -25,8 +25,6 @@ SECRET_KEY = "#)1r*u^)jds(z5=l7w^$62i45*bn013#lmz9b!i0=06u!$#58o"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "192.168.56.0", "localhost"]
-
 
 # Application definition
 
@@ -40,6 +38,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "debug_toolbar",
     "django_filters",
+    "core",
     "tweets",
     "friendships",
     "newsfeeds",
@@ -90,13 +89,16 @@ WSGI_APPLICATION = "twitter.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "twitter",
-        "HOST": "0.0.0.0",
-        "PORT": "3306",
-        "USER": "root",
-        "PASSWORD": "yourpassword",  # 这里是自己下载mysql时候输入两次的那个密码
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': 'django',
+        'HOST': 'db',
+        'PORT': 3306,
+        'TEST': {
+            'MIRROR': "default",
+        },
     }
 }
 
@@ -138,8 +140,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-
-INTERNAL_IPS = ["10.0.2.2"]
 
 try:
     from .local_settings import *
