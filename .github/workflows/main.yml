@@ -23,10 +23,8 @@ jobs:
           python-version: 3.6
       - name: Install Dependencies
         run: |
-          sudo apt-get install -y libmysqlclient-dev gcc python3-pip
-          python3 -m pip install --upgrade pip
-          pip3 install docker-compose
-          pip3 install -r requirements.txt
+          sudo apt-get install -y mysql-server default-libmysqlclient-dev gcc libmariadb-dev
+          pip install docker-compose
       - name: Run Tests
         run: |
-          docker-compose run web sh -c "python3 manage.py wait_for_db && python3 manage.py test"
+          docker-compose run web sh -c "python manage.py wait_for_db && python manage.py test"
