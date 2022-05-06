@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,14 +36,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third party
     "rest_framework",
     "debug_toolbar",
     "django_filters",
+    # project apps
     "core",
     "tweets",
     "friendships",
     "newsfeeds",
     "comments",
+    "likes",
 ]
 
 REST_FRAMEWORK = {
@@ -89,15 +93,15 @@ WSGI_APPLICATION = "twitter.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',
-        'USER': 'django',
-        'PASSWORD': 'django',
-        'HOST': 'db',
-        'PORT': 3306,
-        'TEST': {
-            'MIRROR': "default",
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "django",
+        "USER": "django",
+        "PASSWORD": "django",
+        "HOST": "db",
+        "PORT": 3306,
+        "TEST": {
+            "MIRROR": "default",
         },
     }
 }
@@ -135,6 +139,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# set for toolbar and testmode for toolbar
+INTERNAL_IPS = ["127.0.0.1"]
+
+TESTING_MODE = "test" in sys.argv
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
