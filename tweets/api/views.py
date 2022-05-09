@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from tweets.api.serializers import (
     TweetSerializer,
     TweetSerializerForCreate,
-    TweetSerializerWithComments,
+    TweetSerializerForDetail,
 )
 from tweets.models import Tweet
 from utils.decorators import required_params
@@ -25,8 +25,11 @@ class TweetViewSet(viewsets.GenericViewSet):
         return [IsAuthenticated()]
 
     def retrieve(self, request, *args, **kwargs):
-        tweet = self.get_object()
-        return Response(TweetSerializerWithComments(tweet).data)
+        serializer = TweetSerializerForDetail(
+            self.get_object(),
+            context={"request": request},
+        )
+        return Response(serializer.data)
 
     @required_params(params=["user_id"])
     def list(self, request, *args, **kwargs):
@@ -34,7 +37,7 @@ class TweetViewSet(viewsets.GenericViewSet):
         tweets = Tweet.objects.filter(user_id=user_id).order_by("-created_at")
 
         # set the many=True, return list of dict
-        serializer = TweetSerializer(tweets, many=True)
+        serializer = TweetSerializer(tweets, context={"request": request}, many=True)
         return Response({"tweets": serializer.data})
 
     def create(self, request):
@@ -56,4 +59,5 @@ class TweetViewSet(viewsets.GenericViewSet):
         # save the serializer would call create method in TweetSerializerForCreate
         tweet = serializer.save()
         NewsFeedServices.fanout_to_followers(tweet)
-        return Response(TweetSerializer(tweet).data, status=201)
+        serializer = TweetSerializer(tweet, context={"request": request})
+        return Response(serializer.data, status=201)

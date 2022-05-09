@@ -188,17 +188,17 @@ class LikeApiTests(TestCase):
         response = anonymous_client.get(COMMENT_LIST_API, {"tweet_id": tweet.id})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["comments"][0]["has_liked"], False)
-        self.assertEqual(response.data["comments"][0]["liked_count"], 0)
+        self.assertEqual(response.data["comments"][0]["likes_count"], 0)
 
         # test comments list api
         response = self.user2_client.get(COMMENT_LIST_API, {"tweet_id": tweet.id})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["comments"][0]["has_liked"], False)
-        self.assertEqual(response.data["comments"][0]["liked_count"], 0)
+        self.assertEqual(response.data["comments"][0]["likes_count"], 0)
         self.create_like(self.user2, comment)
         response = self.user2_client.get(COMMENT_LIST_API, {"tweet_id": tweet.id})
         self.assertEqual(response.data["comments"][0]["has_liked"], True)
-        self.assertEqual(response.data["comments"][0]["liked_count"], 1)
+        self.assertEqual(response.data["comments"][0]["likes_count"], 1)
 
         # test tweet detail api
         self.create_like(self.user1, comment)
@@ -206,7 +206,7 @@ class LikeApiTests(TestCase):
         response = self.user2_client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["comments"][0]["has_liked"], True)
-        self.assertEqual(response.data["comments"][0]["liked_count"], 2)
+        self.assertEqual(response.data["comments"][0]["likes_count"], 2)
 
     def test_likes_in_tweets_api(self):
         tweet = self.create_tweet(self.user1)
@@ -216,17 +216,17 @@ class LikeApiTests(TestCase):
         response = self.user2_client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["has_liked"], False)
-        self.assertEqual(response.data["liked_count"], 0)
+        self.assertEqual(response.data["likes_count"], 0)
         self.create_like(self.user2, tweet)
         response = self.user2_client.get(url)
         self.assertEqual(response.data["has_liked"], True)
-        self.assertEqual(response.data["liked_count"], 1)
+        self.assertEqual(response.data["likes_count"], 1)
 
         # test tweets list api
         response = self.user2_client.get(TWEET_LIST_API, {"user_id": self.user1.id})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["tweets"][0]["has_liked"], True)
-        self.assertEqual(response.data["tweets"][0]["liked_count"], 1)
+        self.assertEqual(response.data["tweets"][0]["likes_count"], 1)
 
         # test newsfeeds list api
         self.create_like(self.user1, tweet)
