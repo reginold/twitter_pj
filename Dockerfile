@@ -8,6 +8,7 @@ RUN apt-get update && \
 RUN sudo apt-get install tree
 
 RUN DEBIAN_FRONTEND=noninteractivate apt-get install -y mysql-server
+RUN sudo apt-get update
 RUN sudo apt-get install -y libmysqlclient-dev gcc libmariadb-dev
 RUN sudo apt-get install -y python3-pip 
 RUN sudo apt-get install -y python-setuptools 
