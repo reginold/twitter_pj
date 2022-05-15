@@ -28,3 +28,5 @@ You can refer the official [rest framework documentation](https://www.django-res
 - Create the Unittest
   - You can use the unittest to test the code.
   - `python manage.py test` will test all the code in the project under the `./${project_folder}`.
+- Rebuild the docker image
+  - `docker-compose up --build`

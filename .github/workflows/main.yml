@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -23,6 +22,7 @@ jobs:
           python-version: 3.6
       - name: Install Dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install -y mysql-server gcc libmariadb-dev
           pip install docker-compose
       - name: Run Tests

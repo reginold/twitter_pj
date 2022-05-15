@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "debug_toolbar",
     "django_filters",
+    "notifications",
     # project apps
     "core",
     "tweets",
