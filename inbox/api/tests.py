@@ -1,3 +1,6 @@
+from curses import REPORT_MOUSE_POSITION
+from xmlrpc.client import ResponseError
+
 from notifications.models import Notification
 from testing.testcases import TestCase
 
@@ -149,3 +152,57 @@ class NotificationApiTests(TestCase):
         self.assertEqual(response.data["count"], 1)
         response = self.user1_client.get(NOTIFICATIONS_URL, {"unread": False})
         self.assertEqual(response.data["count"], 1)
+
+    def test_update(self):
+        self.user2_client.post(
+            LIKE_URL,
+            {
+                "content_type": "tweet",
+                "object_id": self.user1_tweet.id,
+            },
+        )
+        comment = self.create_comment(self.user1, self.user1_tweet)
+        self.user2_client.post(
+            LIKE_URL,
+            {
+                "content_type": "comment",
+                "object_id": comment.id,
+            },
+        )
+        notification = self.user1.notifications.first()
+
+        url = "/api/notifications/{}/".format(notification.id)
+
+        # post error
+        response = self.user2_client.post(url, {"unread": False})
+        self.assertEqual(response.status_code, 405)
+
+        # cannot update by the anonymous
+        response = self.anonymous_client.put(url, {"unread": False})
+        self.assertEqual(response.status_code, 403)
+
+        # queryset ordered by login users, return 404
+        response = self.user2_client.put(url, {"unread": False})
+        self.assertEqual(response.status_code, 404)
+
+        # marked as read
+        response = self.user1_client.put(url, {"unread": False})
+        self.assertEqual(response.status_code, 200)
+        unread_url = "/api/notifications/unread-count/"
+        response = self.user1_client.get(unread_url)
+        self.assertEqual(response.data["unread_count"], 1)
+
+        # marked again
+        response = self.user1_client.put(url, {"unread": True})
+        response = self.user1_client.get(unread_url)
+        self.assertEqual(response.data["unread_count"], 2)
+
+        # need unread
+        response = self.user1_client.put(url, {"verb": "test"})
+        self.assertEqual(response.status_code, 400)
+
+        # cannot modify the info
+        response = self.user1_client.put(url, {"verb": "test", "unread": False})
+        self.assertEqual(response.status_code, 200)
+        notification.refresh_from_db()
+        self.assertNotEqual(notification.verb, "test")
