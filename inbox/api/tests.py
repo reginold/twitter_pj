@@ -1,6 +1,3 @@
-from curses import REPORT_MOUSE_POSITION
-from xmlrpc.client import ResponseError
-
 from notifications.models import Notification
 from testing.testcases import TestCase
 
