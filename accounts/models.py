@@ -6,7 +6,7 @@ class UserProfile(models.Model):
     # use one2one field to create the unique index, so that the point the diff userprofile
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     # user the filefield , not imagefield
-    avater = models.FileField(null=True)
+    avatar = models.FileField(null=True)
 
     nickname = models.CharField(null=True, max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
