@@ -144,8 +144,6 @@ USE_TZ = True
 # set for toolbar and testmode for toolbar
 INTERNAL_IPS = ["127.0.0.1"]
 
-TESTING_MODE = "test" in sys.argv
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -154,6 +152,18 @@ STATIC_URL = "/static/"
 
 # store the file (txt, images etc)
 MEDIA_ROOT = "media/"
+
+# set the storage system
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# set the test mode
+TESTING = (" ".join(sys.argv)).find("mange.py test") != -1
+if TESTING:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+# set the aws s3 bucket and region
+AWS_STORAGE_BUCKET_NAME = "django-twitter-lu"
+AWS_S3_REGION_NAME = "ap-northeast-1"
 
 try:
     from .local_settings import *
