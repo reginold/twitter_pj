@@ -157,8 +157,8 @@ MEDIA_ROOT = "media/"
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 # set the test mode
-TESTING = (" ".join(sys.argv)).find("mange.py test") != -1
-if TESTING:
+TESTING_MODE = (" ".join(sys.argv)).find("manage.py test") != -1
+if TESTING_MODE:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # set the aws s3 bucket and region
