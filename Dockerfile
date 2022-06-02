@@ -26,10 +26,11 @@ RUN mkdir /vagrant
 WORKDIR /vagrant
 COPY . /vagrant/
 
-RUN useradd -ms /bin/bash user
-RUN chown -R user: /vagrant
-USER user
-
+# RUN useradd -ms /bin/bash user
+# RUN chown -R user: /vagrant
+# USER user
+# tempory detailing with making media folder
+USER root
 
 
 
