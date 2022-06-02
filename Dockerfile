@@ -27,9 +27,8 @@ WORKDIR /vagrant
 COPY . /vagrant/
 
 RUN useradd -ms /bin/bash user
+RUN chown -R user: /vagrant
 USER user
-
-RUN chmod -R 777 /vagrant
 
 
 
