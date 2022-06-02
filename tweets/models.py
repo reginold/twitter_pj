@@ -4,6 +4,8 @@ from django.db import models
 from likes.models import Like
 from utils.time_helpers import utc_now
 
+from tweets.constants import TWEET_PHOTO_STATUS_CHOICES, TweetPhotoStatus
+
 
 class Tweet(models.Model):
     user = models.ForeignKey(
@@ -40,3 +42,36 @@ class Tweet(models.Model):
             content_type=ContentType.objects.get_for_model(Tweet),
             object_id=self.id,
         ).order_by("-created_at")
+
+
+class TweetPhoto(models.Model):
+    tweet = models.ForeignKey(Tweet, on_delete=models.SET_NULL, null=True)
+    # distinguish the images and in the future if the user upload the illegal images
+    # so that you can track the user quickly, regardless of tweet.user
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+    # image file
+    file = models.FileField()
+    order = models.IntegerField(default=0)
+
+    # image status, used by audit
+    status = models.IntegerField(
+        default=TweetPhotoStatus.PENDING,
+        choices=TWEET_PHOTO_STATUS_CHOICES,
+    )
+
+    # soft delete, will deleted after the xx time
+    has_deleted = models.BooleanField(default=True)
+    deleted_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        index_together = (
+            ("user", "created_at"),
+            ("has_deleted", "created_at"),
+            ("status", "created_at"),
+            ("tweet", "order"),
+        )
+
+    def __str__(self) -> str:
+        return f"{self.tweet_id}: {self.file}"
