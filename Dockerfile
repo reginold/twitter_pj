@@ -22,10 +22,11 @@ RUN pip3 install -U pip
 COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt 
 
-RUN mkdir /vagrant
+RUN useradd -ms /bin/bash user
+USER user
 
+RUN mkdir /vagrant
 WORKDIR /vagrant
 COPY . /vagrant/
 
-RUN useradd -ms /bin/bash user
-USER user
+
