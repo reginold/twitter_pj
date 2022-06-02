@@ -27,7 +27,5 @@ RUN mkdir /vagrant
 WORKDIR /vagrant
 COPY . /vagrant/
 
-# RUN useradd -ms /bin/bash user
-# USER user
-# mkdir the media folder
-USER root
+RUN useradd -ms /bin/bash user
+USER user
