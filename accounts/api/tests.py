@@ -1,4 +1,5 @@
 from accounts.models import UserProfile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
 
@@ -6,6 +7,7 @@ LOGIN_URL = "/api/accounts/login/"
 LOGOUT_URL = "/api/accounts/logout/"
 SIGNUP_URL = "/api/accounts/signup/"
 LOGIN_STATUS_URL = "/api/accounts/login_status/"
+USER_PROFILE_DETAIL_URL = "/api/profiles/{}/"
 
 
 class AccountApiTests(TestCase):
@@ -55,7 +57,7 @@ class AccountApiTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertNotEqual(response.data["user"], None)
-        self.assertEqual(response.data["user"]["email"], "admin@twitter.com")
+        self.assertEqual(response.data["user"]["id"], self.user.id)
 
         # verify the has_logged_in return code
         response = self.client.get(LOGIN_STATUS_URL)
@@ -144,3 +146,68 @@ class AccountApiTests(TestCase):
         self.assertNotEqual(profile, None)
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data["has_logged_in"], True)
+
+
+class UserProfileAPITest(TestCase):
+    def test_update(self):
+        """test the profile can only be updated by himself"""
+        user1, user1_client = self.create_user_and_client("user1", "user1@sample.com")
+        profile = user1.profile
+        profile.nickname = "old nickname"
+        profile.save()
+        url = USER_PROFILE_DETAIL_URL.format(profile.id)
+
+        # anonymous user cannot update the avatar
+        response = self.anonymous_client.put(
+            url,
+            {
+                "nickname": "a new nickname",
+            },
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.data["detail"], "Authentication credentials were not provided."
+        )
+
+        _, user2_client = self.create_user_and_client("user2", "user2@sample.com")
+        response = user2_client.put(
+            url,
+            {
+                "nickname": "a new nickname",
+            },
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.data["detail"], "You dont have permission to access this object"
+        )
+        profile.refresh_from_db()
+        self.assertEqual(profile.nickname, "old nickname")
+
+        # after updated nickname
+        response = user1_client.put(
+            url,
+            {
+                "nickname": "a new nickname",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        profile.refresh_from_db()
+        self.assertEqual(profile.nickname, "a new nickname")
+
+        # after updated avatar
+        response = user1_client.put(
+            url,
+            {
+                "avatar": SimpleUploadedFile(
+                    name="my-avatar.jpg",
+                    content=str.encode("a fake image"),
+                    content_type="image/jpeg",
+                ),
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual("my-avatar" in response.data["avatar"], True)
+        profile.refresh_from_db()
+        self.assertIsNotNone(profile.avatar)
