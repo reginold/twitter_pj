@@ -23,11 +23,14 @@ COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt 
 
 RUN mkdir /vagrant
-
 WORKDIR /vagrant
 COPY . /vagrant/
 
 # RUN useradd -ms /bin/bash user
+# RUN chown -R user: /vagrant
 # USER user
-# mkdir the media folder
+# tempory detailing with making media folder
 USER root
+
+
+
