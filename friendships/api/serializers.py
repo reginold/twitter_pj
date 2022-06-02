@@ -1,4 +1,4 @@
-from accounts.api.serializers import FriendshipSerializer
+from accounts.api.serializers import UserSerializerForFriendship
 from django.contrib.auth.models import User
 from friendships.models import Friendship
 from rest_framework import serializers
@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 
 
 class FollowerSerializer(serializers.ModelSerializer):
-    user = FriendshipSerializer(source="from_user")
+    user = UserSerializerForFriendship(source="from_user")
 
     class Meta:
         model = Friendship
@@ -14,7 +14,7 @@ class FollowerSerializer(serializers.ModelSerializer):
 
 
 class FollowingSerializer(serializers.ModelSerializer):
-    user = FriendshipSerializer(source="to_user")
+    user = UserSerializerForFriendship(source="to_user")
     created_at = serializers.DateTimeField()
 
     class Meta:
