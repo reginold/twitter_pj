@@ -4,6 +4,7 @@ Vagrantfile
 .DS_Store
 .idea
 venv/
+media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
