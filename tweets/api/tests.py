@@ -89,62 +89,73 @@ class TweetApiTests(TestCase):
     def test_create_with_files(self):
         """test the uploading files to tweet"""
         # test uploading ZERO image and content only successfully
-        response = self.user1_client.post(TWEET_CREATE_API, {
-            "content": "uploading the zero image...",
-            "files": [],
-        })
+        response = self.user1_client.post(
+            TWEET_CREATE_API,
+            {
+                "content": "uploading the zero image...",
+                "files": [],
+            },
+        )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(TweetPhoto.objects.count(), 0)
 
         # test uploading ONE image successfully
         file = SimpleUploadedFile(
-            name='1.jpg',
-            content=str.encode('a fake image'),
-            content_type='image/jpeg',
+            name="1.jpg",
+            content=str.encode("a fake image"),
+            content_type="image/jpeg",
         )
-        response = self.user1_client.post(TWEET_CREATE_API, {
-            "content": "uploading the one image...",
-            "files": [file],
-        })
+        response = self.user1_client.post(
+            TWEET_CREATE_API,
+            {
+                "content": "uploading the one image...",
+                "files": [file],
+            },
+        )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(TweetPhoto.objects.count(), 1)
 
         # test uploading the MULTI images successfully
         file_1 = SimpleUploadedFile(
-            name='1.jpg',
-            content=str.encode('a fake image1'),
-            content_type='image/jpeg',
+            name="1.jpg",
+            content=str.encode("a fake image1"),
+            content_type="image/jpeg",
         )
         file_2 = SimpleUploadedFile(
-            name='2.jpg',
-            content=str.encode('a fake image2'),
-            content_type='image/jpeg',
+            name="2.jpg",
+            content=str.encode("a fake image2"),
+            content_type="image/jpeg",
         )
-        response = self.user1_client.post(TWEET_CREATE_API, {
-            "content": "uploading the two pieces of images...",
-            "files": [file_1, file_2],
-        })
+        response = self.user1_client.post(
+            TWEET_CREATE_API,
+            {
+                "content": "uploading the two pieces of images...",
+                "files": [file_1, file_2],
+            },
+        )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(TweetPhoto.objects.count(), 3)
         retrieve_url = TWEET_RETRIEVE_API.format(response.data["id"])
         response = self.user1_client.get(retrieve_url)
         self.assertEqual(len(response.data["photo_urls"]), 2)
-        self.assertEqual("fake" in response.data["photo_urls"][0], True)
-        self.assertEqual("fake" in response.data["photo_urls"][1], True)
+        self.assertEqual("1" in response.data["photo_urls"][0], True)
+        self.assertEqual("2" in response.data["photo_urls"][1], True)
 
         # test uploading the TEN images failed
         files = [
             SimpleUploadedFile(
-                name=f'selfie{i}.jpg',
-                content=str.encode(f'selfie{i}'),
-                content_type='image/jpeg',
+                name=f"selfie{i}.jpg",
+                content=str.encode(f"selfie{i}"),
+                content_type="image/jpeg",
             )
             for i in range(10)
         ]
-        response = self.user1_client.post(TWEET_CREATE_API, {
-            'content': 'failed due to number of photos exceeded limit',
-            'files': files,
-        })
+        response = self.user1_client.post(
+            TWEET_CREATE_API,
+            {
+                "content": "failed due to number of photos exceeded limit",
+                "files": files,
+            },
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(TweetPhoto.objects.count(), 3)
-
