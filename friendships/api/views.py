@@ -9,21 +9,24 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from utils import paginations
 
 
 class FriendshipViewSet(viewsets.GenericViewSet):
     serializer_class = FriendshipSerializerForCreate
     queryset = User.objects.all()
+    # different view has the different paginaiton
+    pagination_class = paginations.FriendshipPagination
 
     @action(methods=["GET"], detail=True, permission_classes=[AllowAny])
     def followers(self, request, pk):
         # GET /api/friendship/1/followers
         friendships = Friendship.objects.filter(to_user_id=pk).order_by("-created_at")
-        serializer = FollowerSerializer(friendships, many=True)
-        return Response(
-            {"followers": serializer.data},
-            status=status.HTTP_200_OK,
+        serializer = FollowerSerializer(
+            friendships, many=True, context={"request": request}
         )
+        self.paginate_queryset(friendships)
+        return self.get_paginated_response(serializer.data)
 
     def list(self, request):
         return Response({"message": "this is the message"})
@@ -31,11 +34,11 @@ class FriendshipViewSet(viewsets.GenericViewSet):
     @action(methods=["GET"], detail=True, permission_classes=[AllowAny])
     def followings(self, request, pk):
         friendships = Friendship.objects.filter(from_user_id=pk).order_by("-created_at")
-        serializer = FollowingSerializer(friendships, many=True)
-        return Response(
-            {"followings": serializer.data},
-            status=status.HTTP_200_OK,
+        serializer = FollowerSerializer(
+            friendships, many=True, context={"request": request}
         )
+        self.paginate_queryset(friendships)
+        return self.get_paginated_response(serializer.data)
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAuthenticated])
     def follow(self, request, pk):
