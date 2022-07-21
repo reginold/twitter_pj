@@ -22,10 +22,8 @@ class FriendshipViewSet(viewsets.GenericViewSet):
     def followers(self, request, pk):
         # GET /api/friendship/1/followers
         friendships = Friendship.objects.filter(to_user_id=pk).order_by("-created_at")
-        serializer = FollowerSerializer(
-            friendships, many=True, context={"request": request}
-        )
-        self.paginate_queryset(friendships)
+        page = self.paginate_queryset(friendships)
+        serializer = FollowerSerializer(page, many=True, context={"request": request})
         return self.get_paginated_response(serializer.data)
 
     def list(self, request):
@@ -34,10 +32,8 @@ class FriendshipViewSet(viewsets.GenericViewSet):
     @action(methods=["GET"], detail=True, permission_classes=[AllowAny])
     def followings(self, request, pk):
         friendships = Friendship.objects.filter(from_user_id=pk).order_by("-created_at")
-        serializer = FollowerSerializer(
-            friendships, many=True, context={"request": request}
-        )
-        self.paginate_queryset(friendships)
+        page = self.paginate_queryset(friendships)
+        serializer = FollowingSerializer(page, many=True, context={"request": request})
         return self.get_paginated_response(serializer.data)
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAuthenticated])
@@ -72,7 +68,7 @@ class FriendshipViewSet(viewsets.GenericViewSet):
             )
         instance = serializer.save()
         return Response(
-            FollowingSerializer(instance).data,
+            FollowingSerializer(instance, context={"request": request}).data,
             status=status.HTTP_201_CREATED,
         )
 
