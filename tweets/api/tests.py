@@ -174,7 +174,7 @@ class TweetApiTests(TestCase):
         # pull the first page
         response = self.user1_client.get(TWEET_LIST_API, {"user_id": self.user1.id})
         self.assertEqual(response.data["has_next_page"], True)
-        self.assertEqual(len(response.date["results"]), page_size)
+        self.assertEqual(len(response.data["results"]), page_size)
         self.assertEqual(response.data["results"][0]["id"], tweets[0].id)
         self.assertEqual(response.data["results"][1]["id"], tweets[1].id)
         self.assertEqual(
@@ -185,12 +185,13 @@ class TweetApiTests(TestCase):
         response = self.user1_client.get(
             TWEET_LIST_API,
             {
-                "create_at__lt": tweets[page_size - 1].create_at,
+                "created_at__lt": tweets[page_size - 1].created_at,
                 "user_id": self.user1.id,
             },
         )
+
         self.assertEqual(response.data["has_next_page"], False)
-        self.assertEqual(len(response.date["results"]), page_size)
+        self.assertEqual(len(response.data["results"]), page_size)
         self.assertEqual(response.data["results"][0]["id"], tweets[page_size].id)
         self.assertEqual(response.data["results"][1]["id"], tweets[page_size + 1].id)
         self.assertEqual(
@@ -201,24 +202,22 @@ class TweetApiTests(TestCase):
         response = self.user1_client.get(
             TWEET_LIST_API,
             {
-                "create_at__gt": tweets[0].created_at,
+                "created_at__gt": tweets[0].created_at,
                 "user_id": self.user1.id,
             },
         )
         self.assertEqual(response.data["has_next_page"], False)
-        self.assertEqual(len(response.date["results"]), 0)
+        self.assertEqual(len(response.data["results"]), 0)
 
         new_tweet = self.create_tweet(self.user1, "a new tweet comes in...")
 
         response = self.user1_client.get(
             TWEET_LIST_API,
             {
-                {
-                    "create_at__gt": tweets[0].created_at,
-                    "user_id": self.user1.id,
-                },
+                "created_at__gt": tweets[0].created_at,
+                "user_id": self.user1.id,
             },
         )
         self.assertEqual(response.data["has_next_page"], False)
         self.assertEqual(len(response.data["results"]), 1)
-        self.assertEqual(response.data["result"][0]["id"], new_tweet.id)
+        self.assertEqual(response.data["results"][0]["id"], new_tweet.id)
