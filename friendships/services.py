@@ -1,4 +1,9 @@
+from django.conf import settings
+from django.core.cache import caches
+
 from friendships.models import Friendship
+
+cache = caches["testing"] if settings.TESTING else caches["default"]
 
 
 # userA following list, the loggedin user can see the following list

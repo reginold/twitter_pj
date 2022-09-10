@@ -165,6 +165,22 @@ if TESTING_MODE:
 AWS_STORAGE_BUCKET_NAME = "django-twitter-lu"
 AWS_S3_REGION_NAME = "ap-northeast-1"
 
+# ref: https://docs.djangoproject.com/en/3.1/topics/cache/
+# DON'T use the pip install memcache or pip install django-memcached
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "LOCATION": "127.0.0.1:11211",
+        "TIMEOUT": 86400,
+    },
+    "testing": {
+        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "LOCATION": "127.0.0.1:11211",
+        "TIMEOUT": 86400,
+        "KEY_PREFIX": "testing",
+    },
+}
+
 try:
     from .local_settings import *
 except:
