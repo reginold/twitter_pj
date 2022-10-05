@@ -167,11 +167,12 @@ AWS_S3_REGION_NAME = "ap-northeast-1"
 
 # ref: https://docs.djangoproject.com/en/3.1/topics/cache/
 # DON'T use the pip install memcache or pip install django-memcached
+# USE pip install python-memcache
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
         "LOCATION": "127.0.0.1:11211",
-        "TIMEOUT": 86400,
+        "TIMEOUT": 86400,  # TTL time to live
     },
     "testing": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
