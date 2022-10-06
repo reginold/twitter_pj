@@ -1,7 +1,7 @@
+from friendships.api.paginations import FriendshipPagination
 from friendships.models import Friendship
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
-from friendships.api.paginations import FriendshipPagination
 
 FOLLOW_URL = "/api/friendships/{}/follow/"
 UNFOLLOW_URL = "/api/friendships/{}/unfollow/"
@@ -11,7 +11,7 @@ FOLLOWINGS_URL = "/api/friendships/{}/followings/"
 
 class FriendshipApiTests(TestCase):
     def setUp(self):
-
+        self.clear_cache()
         self.linghu = self.create_user("linghu", email="test1@gmail.com")
         self.linghu_client = APIClient()
         self.linghu_client.force_authenticate(self.linghu)
