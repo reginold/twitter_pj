@@ -171,12 +171,12 @@ AWS_S3_REGION_NAME = "ap-northeast-1"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-        "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "cache:11211",
         "TIMEOUT": 86400,  # TTL time to live
     },
     "testing": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-        "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "cache:11211",
         "TIMEOUT": 86400,
         "KEY_PREFIX": "testing",
     },

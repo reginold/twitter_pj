@@ -24,6 +24,13 @@ services:
       - 8000:8000
     depends_on:
       - db
+  cache:
+    image: memcached
+    ports:
+      - "11211:11211"
+    entrypoint:
+      - memcached
+      - -m 64
 
 volumes:
   mysql:
