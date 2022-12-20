@@ -1,6 +1,3 @@
-from curses import REPORT_MOUSE_POSITION
-from xmlrpc.client import ResponseError
-
 from notifications.models import Notification
 from testing.testcases import TestCase
 
@@ -11,6 +8,7 @@ NOTIFICATIONS_URL = "/api/notifications/"
 
 class NotificationTests(TestCase):
     def setUp(self):
+        self.clear_cache()
         self.user1, self.user1_client = self.create_user_and_client(
             "user1", "user1@sample.com"
         )
