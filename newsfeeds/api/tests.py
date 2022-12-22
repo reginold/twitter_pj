@@ -63,18 +63,18 @@ class NewsFeedApiTests(TestCase):
         # Relation: Newsfeed --> Tweet ---> User ---> Profile
         # Test case: test the modification with profile and newsfeed will not be affected
         #            when add the cache feature
-        profile = self.user2.profile  # type: ignore
+        profile = self.user2.profile
         profile.nickname = "user2_nicky"
-        profile.save()
+        profile.save
 
         self.assertEqual(self.user1.username, "user1")
         self.create_newsfeed(self.user2, self.create_tweet(self.user1))
-        self.create_newsfeed(self.user1, self.create_tweet(self.user2))
+        self.create_newsfeed(self.user2, self.create_tweet(self.user2))
 
         response = self.user2_client.get(NEWSFEEDS_URL)
-        results = response.data["results"]
+        results = response.data["newsfeeds"]
         self.assertEqual(results[0]["tweet"]["user"]["username"], "user2")
-        self.assertEqual(results[0]["tweet"]["user"]["nickname"], "user1")
+        self.assertEqual(results[0]["tweet"]["user"]["nickname"], "user2_nicky")
         self.assertEqual(results[1]["tweet"]["user"]["username"], "user1")
 
         self.user1.username = "user1-for-test"
@@ -83,7 +83,7 @@ class NewsFeedApiTests(TestCase):
         profile.save()
 
         response = self.user2_client.get(NEWSFEEDS_URL)
-        results = response.data["results"]
+        results = response.data["newsfeeds"]
         self.assertEqual(results[0]["tweet"]["user"]["username"], "user2")
         self.assertEqual(results[0]["tweet"]["user"]["nickname"], "user2-for-test")
         self.assertEqual(results[1]["tweet"]["user"]["username"], "user1-for-test")
