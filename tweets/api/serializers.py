@@ -1,16 +1,17 @@
-from accounts.api.serializers import UserSerializer
-from comments.api.serializers import CommentSerializer
 from django.forms import ValidationError
+from rest_framework import serializers
+
+from accounts.api.serializers import UserSerializerForTweet
+from comments.api.serializers import CommentSerializer
 from likes.api.serializers import LikeSerializer
 from likes.services import LikeService
-from rest_framework import serializers
 from tweets.constants import TWEET_PHOTOS_UPLOAD_LIMIT
 from tweets.models import Tweet
 from tweets.services import TweetService
 
 
 class TweetSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializerForTweet()
     comments_count = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     has_liked = serializers.SerializerMethodField()
