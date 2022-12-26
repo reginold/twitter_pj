@@ -1,6 +1,7 @@
-from comments.models import Comment
 from django.utils import timezone
 from rest_framework.test import APIClient
+
+from comments.models import Comment
 from testing.testcases import TestCase
 
 COMMENT_URL = "/api/comments/"
@@ -11,6 +12,7 @@ NEWSFEED_LIST_API = "/api/newsfeeds/"
 
 class CommentApiTests(TestCase):
     def setUp(self):
+        self.clear_cache()
         self.user1 = self.create_user("linghu", email="test1@gmail.com")
         self.user1_client = APIClient()
         self.user1_client.force_authenticate(self.user1)

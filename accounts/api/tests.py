@@ -1,6 +1,7 @@
-from accounts.models import UserProfile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
+
+from accounts.models import UserProfile
 from testing.testcases import TestCase
 
 LOGIN_URL = "/api/accounts/login/"
@@ -12,6 +13,7 @@ USER_PROFILE_DETAIL_URL = "/api/profiles/{}/"
 
 class AccountApiTests(TestCase):
     def setUp(self):
+        self.clear_cache()
         self.client = APIClient()
         self.user = self.create_user(
             username="someone",

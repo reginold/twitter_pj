@@ -1,5 +1,6 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
+
 from testing.testcases import TestCase
 from tweets.models import Tweet, TweetPhoto
 from utils.paginations import EndlessPagination
@@ -12,7 +13,7 @@ TWEET_RETRIEVE_API = "/api/tweets/{}/"
 
 class TweetApiTests(TestCase):
     def setUp(self):
-
+        self.clear_cache()
         self.user1 = self.create_user("user1", "user1@gmail.com")
         self.tweets1 = [self.create_tweet(self.user1) for i in range(3)]
         self.user1_client = APIClient()
