@@ -39,11 +39,11 @@ class NewsFeedApiTests(TestCase):
         # base zero
         response = self.user1_client.get(NEWSFEEDS_URL)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["newsfeeds"]), 0)
+        self.assertEqual(len(response.data["results"]), 0)
         # newsfeed shows yourself tweet
         self.user1_client.post(POST_TWEETS_URL, {"content": "Hello World"})
         response = self.user1_client.get(NEWSFEEDS_URL)
-        self.assertEqual(len(response.data["newsfeeds"]), 1)
+        self.assertEqual(len(response.data["results"]), 1)
         # when follow the user, can see the following feed
         self.user1_client.post(FOLLOW_URL.format(self.user2.id))
         response = self.user2_client.post(
@@ -54,8 +54,8 @@ class NewsFeedApiTests(TestCase):
         )
         posted_tweet_id = response.data["id"]
         response = self.user1_client.get(NEWSFEEDS_URL)
-        self.assertEqual(len(response.data["newsfeeds"]), 2)
-        self.assertEqual(response.data["newsfeeds"][0]["tweet"]["id"], posted_tweet_id)
+        self.assertEqual(len(response.data["results"]), 2)
+        self.assertEqual(response.data["results"][0]["tweet"]["id"], posted_tweet_id)
 
     def test_user_cache(self):
         # Relation: Newsfeed --> Tweet ---> User ---> Profile
@@ -70,7 +70,7 @@ class NewsFeedApiTests(TestCase):
         self.create_newsfeed(self.user2, self.create_tweet(self.user2))
 
         response = self.user2_client.get(NEWSFEEDS_URL)
-        results = response.data["newsfeeds"]
+        results = response.data["results"]
         self.assertEqual(results[0]["tweet"]["user"]["username"], "user2")
         # self.assertEqual(results[0]["tweet"]["user"]["nickname"], "user2_nicky")
         self.assertEqual(results[1]["tweet"]["user"]["username"], "user1")
@@ -81,7 +81,7 @@ class NewsFeedApiTests(TestCase):
         profile.save()
 
         response = self.user2_client.get(NEWSFEEDS_URL)
-        results = response.data["newsfeeds"]
+        results = response.data["results"]
         self.assertEqual(results[0]["tweet"]["user"]["username"], "user2")
         # self.assertEqual(results[0]["tweet"]["user"]["nickname"], "user2-for-test")
         self.assertEqual(results[1]["tweet"]["user"]["username"], "user1-for-test")
