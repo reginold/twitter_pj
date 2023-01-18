@@ -8,3 +8,4 @@ django-notifications-hq==1.7.0
 boto3==1.16.36
 django-storages==1.10.1
 python-memcached
+redis==4.3.5
