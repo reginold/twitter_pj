@@ -24,14 +24,22 @@ services:
       - 8000:8000
     depends_on:
       - db
-  cache:
+      - memcached
+      - redis
+  memcached:
     image: memcached
     ports:
       - "11211:11211"
     entrypoint:
       - memcached
       - -m 64
-
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redisdata:/data"
 volumes:
+  redisdata:
   mysql:
     driver: local
