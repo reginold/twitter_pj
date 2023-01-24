@@ -53,5 +53,5 @@ class TweetTests(TestCase):
         self.assertEqual(data, None)
 
         data = conn.get(f"tweet: {tweet.id}")
-        cached_tweet = DjangoModelSerializer.deserializer(data)
+        cached_tweet = DjangoModelSerializer.deserialize(data)
         self.assertEqual(tweet, cached_tweet)
