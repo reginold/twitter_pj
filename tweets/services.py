@@ -18,9 +18,9 @@ class TweetService(object):
         TweetPhoto.objects.bulk_create(photos)
 
     @classmethod
-    def get_caches_tweets(cls, user_id):
+    def get_cached_tweets(cls, user_id):
         # Queryset is lazy loading
-        queryset = Tweet.objects.filter(user_id).order_by("-created_at")
+        queryset = Tweet.objects.filter(user_id=user_id).order_by("-created_at")
         key = USER_TWEETS_PATTERN.format(user_id=user_id)
         return RedisHelper.load_objects(key, queryset)
 
@@ -29,5 +29,4 @@ class TweetService(object):
         # Queryset is lazy loading
         queryset = Tweet.objects.filter(user_id=tweet.user_id).order_by("-created_at")
         key = USER_TWEETS_PATTERN.format(user_id=tweet.user_id)
-        RedisHelper.push_objects(key, tweet, queryset)
-        
+        RedisHelper.push_object(key, tweet, queryset)
