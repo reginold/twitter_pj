@@ -12,7 +12,11 @@ class NewsFeedServices(object):
             for follower in FriendshipService.get_followers(tweet.user)
         ]
         newsfeeds.append(NewsFeed(user=tweet.user, tweet=tweet))
+        # use bulk_create to change insert to one line
         NewsFeed.objects.bulk_create(newsfeeds)
+        # since post_save signal func would not trigger the bulk create, need push into cache
+        for newsfeed in newsfeeds:
+            cls.push_newsfeed_to_cache(newsfeed)
 
     @classmethod
     def get_cached_newsfeeds(cls, user_id):

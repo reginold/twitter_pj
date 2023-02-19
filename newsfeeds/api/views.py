@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from newsfeeds.api.serializers import NewsFeedSerializer
-from newsfeeds.models import NewsFeedService
+from newsfeeds.services import NewsFeedServices
 from utils.paginations import EndlessPagination
 
 
@@ -12,7 +12,7 @@ class NewsFeedViewSet(viewsets.GenericViewSet):
     pagination_class = EndlessPagination
 
     def list(self, request):
-        newsfeeds = NewsFeedService.get_cached_newsfeeds(request.user.id)
+        newsfeeds = NewsFeedServices.get_cached_newsfeeds(request.user.id)
         page = self.paginate_queryset(newsfeeds)
         serializer = NewsFeedSerializer(
             page, context={"request": request}, many=True
