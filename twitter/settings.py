@@ -189,6 +189,8 @@ REDIS_HOST = "redis"
 REDIS_PORT = 6379
 REDIS_DB = 0 if TESTING_MODE else 1
 REDIS_KEY_EXPIRE_TIME = 7 * 86400  # in seconds
+# size of limit should be larger than the pagination size
+REDIS_LIST_LENGTH_LIMIT = 200 if not TESTING_MODE else 20
 
 try:
     from .local_settings import *
