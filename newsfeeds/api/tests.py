@@ -1,7 +1,11 @@
+from django.conf import settings
 from rest_framework.test import APIClient
 
 from friendships.models import Friendship
+from newsfeeds.models import NewsFeed
+from newsfeeds.services import NewsFeedServices
 from testing.testcases import TestCase
+from utils.paginations import EndlessPagination
 
 NEWSFEEDS_URL = "/api/newsfeeds/"
 POST_TWEETS_URL = "/api/tweets/"
@@ -85,3 +89,75 @@ class NewsFeedApiTests(TestCase):
         self.assertEqual(results[0]["tweet"]["user"]["username"], "user2")
         # self.assertEqual(results[0]["tweet"]["user"]["nickname"], "user2-for-test")
         self.assertEqual(results[1]["tweet"]["user"]["username"], "user1-for-test")
+
+    def test_tweet_cache(self):
+        tweet = self.create_tweet(self.user1, 'content1')
+        self.create_newsfeed(self.user2, tweet)
+        response = self.user2_client.get(NEWSFEEDS_URL)
+        results = response.data['results']
+        self.assertEqual(results[0]['tweet']['user']['username'], 'user1')
+        self.assertEqual(results[0]['tweet']['content'], 'content1')
+
+        # update username
+        self.user1.username = 'user1chong'
+        self.user1.save()
+        response = self.user2_client.get(NEWSFEEDS_URL)
+        results = response.data['results']
+        self.assertEqual(results[0]['tweet']['user']['username'], 'user1chong')
+
+        # update content
+        tweet.content = 'content2'
+        tweet.save()
+        response = self.user2_client.get(NEWSFEEDS_URL)
+        results = response.data['results']
+        self.assertEqual(results[0]['tweet']['content'], 'content2')
+
+    def _paginate_to_get_newsfeeds(self, client):
+        # paginate until the end
+        response = client.get(NEWSFEEDS_URL)
+        results = response.data['results']
+        while response.data['has_next_page']:
+            created_at__lt = response.data['results'][-1]['created_at']
+            response = client.get(NEWSFEEDS_URL, {'created_at__lt': created_at__lt})
+            results.extend(response.data['results'])
+        return results
+
+    def test_redis_list_limit(self):
+        list_limit = settings.REDIS_LIST_LENGTH_LIMIT
+        page_size = EndlessPagination.page_size
+        users = [self.create_user(f'user{i}test', email="user@example.com") for i in range(5)]
+        newsfeeds = []
+        for i in range(list_limit + page_size):
+            tweet = self.create_tweet(user=users[i % 5], content='feed{}'.format(i))
+            feed = self.create_newsfeed(self.user1, tweet)
+            newsfeeds.append(feed)
+        newsfeeds = newsfeeds[::-1]
+
+        # only cached list_limit objects
+        cached_newsfeeds = NewsFeedServices.get_cached_newsfeeds(self.user1.id)
+        self.assertEqual(len(cached_newsfeeds), list_limit)
+        queryset = NewsFeed.objects.filter(user=self.user1)
+        self.assertEqual(queryset.count(), list_limit + page_size)
+
+        results = self._paginate_to_get_newsfeeds(self.user1_client)
+        self.assertEqual(len(results), list_limit + page_size)
+        for i in range(list_limit + page_size):
+            self.assertEqual(newsfeeds[i].id, results[i]['id'])
+
+        # a followed user create a new tweet
+        self.create_friendship(self.user1, self.user2)
+        new_tweet = self.create_tweet(self.user2, 'a new tweet')
+        NewsFeedServices.fanout_to_followers(new_tweet)
+
+        def _test_newsfeeds_after_new_feed_pushed():
+            results = self._paginate_to_get_newsfeeds(self.user1_client)
+            self.assertEqual(len(results), list_limit + page_size + 1)
+            self.assertEqual(results[0]['tweet']['id'], new_tweet.id)
+            for i in range(list_limit + page_size):
+                self.assertEqual(newsfeeds[i].id, results[i + 1]['id'])
+
+        _test_newsfeeds_after_new_feed_pushed()
+
+        # cache expired
+        self.clear_cache()
+        _test_newsfeeds_after_new_feed_pushed()
