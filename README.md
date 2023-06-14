@@ -13,16 +13,20 @@
 - Run the localhost django app.
   - `docker-compose up`
 - Show the commands you can use in django framework
-  - `docker-compose run --rm web sh -c "python manage.py"`
+  - `docker-compose run --rm web sh -c "python3 manage.py"`
 
 - Create the databse schema
-  - `docker-compose run --rm web sh -c "python manage.py migrate"`
+  - `docker-compose run --rm web sh -c "python3 manage.py migrate"`
 
 - Create the superuser in Django
-  - `docker-compose run --rm web sh -c "python manage.py createsuperuser"` or write the shell script in provision.sh when vagrant up, that will be created automatically.
+  - `docker-compose run --rm web sh -c "python3 manage.py createsuperuser"` or write the shell script in provision.sh when vagrant up, that will be created automatically.
 
 - Create the account api
-  - `docker-compose run --rm web sh -c "python manage.py startapp accounts"`
+  - `docker-compose run --rm web sh -c "python3 manage.py startapp accounts"`
+
+- Update the database shema
+ - `docker-compose run --rm web sh -c "python3 manage.py makemigrations"`
+  - `docker-compose up --build`
 
 ## How to install the framework and test 
 - Install the rest framework and config the relative setting.
