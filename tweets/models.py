@@ -21,6 +21,12 @@ class Tweet(models.Model):
     content = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # denormalization
+    # if you add new field, please set the null=True, otherwise default=0 will retrive all the old data
+    # Also, when the data migration, it will take a long time, so that the users cannot create the tweet
+    likes_count = models.IntegerField(default=0, null=True)
+    comments_count = models.IntegerField(default=0, null=True)
+
     # POINT:create the compound together, campare the first key, second key...
     #  e.g.
     #  [
