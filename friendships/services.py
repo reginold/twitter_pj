@@ -10,7 +10,7 @@ cache = caches["testing"] if settings.TESTING_MODE else caches["default"]
 # userA following list, the loggedin user can see the following list
 # To userB [followed]
 # To userC [Not followed]
-class FriendshipService(object):
+class FriendshipService:
     @classmethod
     def get_followers(cls, user):
         friendships = Friendship.objects.filter(
@@ -29,7 +29,7 @@ class FriendshipService(object):
 
         # If the data was not stored in cache, we can search from the DB, maybe litte slow.
         friendships = Friendship.objects.filter(from_user_id=from_user_id)
-        user_id_set = set([fs.to_user_id for fs in friendships])
+        user_id_set = {fs.to_user_id for fs in friendships}
         cache.set(key, user_id_set)
         return user_id_set
 

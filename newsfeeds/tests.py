@@ -5,7 +5,6 @@ from utils.redis_client import RedisClient
 
 
 class NewsFeedServiceTests(TestCase):
-
     def setUp(self):
         self.clear_cache()
         self.user1 = self.create_user("user1", "user1@sample.com")
@@ -18,7 +17,7 @@ class NewsFeedServiceTests(TestCase):
             newsfeed = self.create_newsfeed(self.user1, tweet)
             newsfeed_ids.append(newsfeed.id)
         newsfeed_ids = newsfeed_ids[::-1]
-        
+
         # cache miss
         newsfeeds = NewsFeedServices.get_cached_newsfeeds(self.user1.id)
         self.assertEqual([f.id for f in newsfeeds], newsfeed_ids)
@@ -47,4 +46,3 @@ class NewsFeedServiceTests(TestCase):
 
         feeds = NewsFeedServices.get_cached_newsfeeds(self.user1.id)
         self.assertEqual([f.id for f in feeds], [feed2.id, feed1.id])
-

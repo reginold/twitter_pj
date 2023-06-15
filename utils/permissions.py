@@ -2,7 +2,6 @@ from rest_framework.permissions import BasePermission
 
 
 class IsObjectOwner(BasePermission):
-
     message = "You dont have permission to access this object"
 
     def has_permission(self, request, view):

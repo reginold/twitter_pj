@@ -1,11 +1,12 @@
-from inbox.api.serializers import (
-    NotificationSerializer,
-    NotificationSerializerForUpdate,
-)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from inbox.api.serializers import (
+    NotificationSerializer,
+    NotificationSerializerForUpdate,
+)
 from utils.decorators import required_params
 
 
@@ -13,7 +14,6 @@ class NotificationViewSet(
     viewsets.GenericViewSet,
     viewsets.mixins.ListModelMixin,
 ):
-
     serializer_class = NotificationSerializer
     permission_classes = (IsAuthenticated,)
     filterset_fields = ("unread",)

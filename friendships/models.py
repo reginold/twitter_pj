@@ -33,7 +33,7 @@ class Friendship(models.Model):
         unique_together = (("from_user_id", "to_user_id"),)
 
     def __str__(self):
-        return "{} followed {}".format(self.from_user_id, self.to_user_id)
+        return f"{self.from_user_id} followed {self.to_user_id}"
 
     @property
     def cached_from_user(self):

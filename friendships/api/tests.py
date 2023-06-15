@@ -1,6 +1,7 @@
+from rest_framework.test import APIClient
+
 from friendships.api.paginations import FriendshipPagination
 from friendships.models import Friendship
-from rest_framework.test import APIClient
 from testing.testcases import TestCase
 
 FOLLOW_URL = "/api/friendships/{}/follow/"
@@ -23,12 +24,12 @@ class FriendshipApiTests(TestCase):
         # create followings and followers for dongxie
         for i in range(2):
             follower = self.create_user(
-                "dongxie_follower{}".format(i), email="test1@gmail.com"
+                f"dongxie_follower{i}", email="test1@gmail.com"
             )
             Friendship.objects.create(from_user=follower, to_user=self.dongxie)
         for i in range(3):
             following = self.create_user(
-                "dongxie_following{}".format(i), email="test2@gmail.com"
+                f"dongxie_following{i}", email="test2@gmail.com"
             )
             Friendship.objects.create(from_user=self.dongxie, to_user=following)
 
@@ -138,7 +139,7 @@ class FriendshipApiTests(TestCase):
         page_size = FriendshipPagination.page_size
         for i in range(page_size * 2):
             follower = self.create_user(
-                "linghu_follower{}".format(i), email="user1@samgple.com"
+                f"linghu_follower{i}", email="user1@samgple.com"
             )
             Friendship.objects.create(from_user=follower, to_user=self.linghu)
             if follower.id % 2 == 0:
@@ -163,7 +164,7 @@ class FriendshipApiTests(TestCase):
         page_size = FriendshipPagination.page_size
         for i in range(page_size * 2):
             following = self.create_user(
-                "linghu_following{}".format(i), email="user1@samgple.com"
+                f"linghu_following{i}", email="user1@samgple.com"
             )
             Friendship.objects.create(from_user=self.linghu, to_user=following)
             if following.id % 2 == 0:

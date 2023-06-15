@@ -1,3 +1,8 @@
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from inbox.services import NotificationService
 from likes.api.serializers import (
     LikeSerializer,
@@ -5,10 +10,6 @@ from likes.api.serializers import (
     LikeSerializerForCreate,
 )
 from likes.models import Like
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from utils.decorators import required_params
 
 

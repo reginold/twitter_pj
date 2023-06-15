@@ -1,6 +1,7 @@
-from accounts.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework import exceptions, serializers
+
+from accounts.models import UserProfile
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

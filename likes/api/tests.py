@@ -112,7 +112,6 @@ class LikeApiTests(TestCase):
         self.assertEqual(comment.like_set.count(), 2)
 
     def test_cancel(self):
-
         # set user1's comment like and user2's tweet like
         tweet = self.create_tweet(self.user1)
         comment = self.create_comment(self.user2, tweet)

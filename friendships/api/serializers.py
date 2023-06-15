@@ -1,9 +1,10 @@
-from accounts.api.serializers import UserSerializerForFriendship
 from django.contrib.auth.models import User
-from friendships.models import Friendship
-from friendships.services import FriendshipService
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+
+from accounts.api.serializers import UserSerializerForFriendship
+from friendships.models import Friendship
+from friendships.services import FriendshipService
 
 
 class FollowingUserIdSetMixin:

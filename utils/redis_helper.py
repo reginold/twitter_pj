@@ -1,4 +1,3 @@
-
 from django.conf import settings
 
 from utils.redis_client import RedisClient
@@ -13,7 +12,7 @@ class RedisHelper:
         conn = RedisClient.get_connection()
 
         serialized_list = []
-        for obj in objects[:settings.REDIS_LIST_LENGTH_LIMIT]:
+        for obj in objects[: settings.REDIS_LIST_LENGTH_LIMIT]:
             serialized_data = DjangoModelSerializer.serialize(obj)
             serialized_list.append(serialized_data)
 
@@ -51,8 +50,3 @@ class RedisHelper:
         conn.lpush(key, serialized_data)
         # key , start, end --> newdata, olddata
         conn.ltrim(key, 0, settings.REDIS_LIST_LENGTH_LIMIT - 1)
-
-
-
-
-

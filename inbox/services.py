@@ -1,10 +1,11 @@
-from comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from notifications.signals import notify
+
+from comments.models import Comment
 from tweets.models import Tweet
 
 
-class NotificationService(object):
+class NotificationService:
     @classmethod
     def send_like_notification(cls, like):
         target = like.content_object

@@ -168,7 +168,7 @@ class TweetApiTests(TestCase):
         # create page_size * 2 tweets
         # we have created self.tweets1 in setUp
         for i in range(page_size * 2 - len(self.tweets1)):
-            self.tweets1.append(self.create_tweet(self.user1, "tweet{}".format(i)))
+            self.tweets1.append(self.create_tweet(self.user1, f"tweet{i}"))
 
         tweets = self.tweets1[::-1]
 
