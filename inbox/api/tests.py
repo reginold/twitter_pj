@@ -1,4 +1,5 @@
 from notifications.models import Notification
+
 from testing.testcases import TestCase
 
 COMMENT_URL = "/api/comments/"
@@ -169,7 +170,7 @@ class NotificationApiTests(TestCase):
         )
         notification = self.user1.notifications.first()
 
-        url = "/api/notifications/{}/".format(notification.id)
+        url = f"/api/notifications/{notification.id}/"
 
         # post error
         response = self.user2_client.post(url, {"unread": False})

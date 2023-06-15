@@ -7,7 +7,7 @@ cache = caches["testing"] if settings.TESTING_MODE else caches["default"]
 class MemcachedHelper:
     @classmethod
     def get_key(cls, model_class, object_id):
-        return "{}:{}".format(model_class.__name__, object_id)
+        return f"{model_class.__name__}:{object_id}"
 
     @classmethod
     def get_object_through_cache(cls, model_class, object_id):

@@ -54,13 +54,12 @@ class TweetTests(TestCase):
         data = conn.get(f"tweet:not_exists")
         self.assertEqual(data, None)
 
-        data = conn.get(f"tweet: {tweet.id}")  # type: ignore 
+        data = conn.get(f"tweet: {tweet.id}")  # type: ignore
         cached_tweet = DjangoModelSerializer.deserialize(data)
         self.assertEqual(tweet, cached_tweet)
 
 
 class TweetServiceTests(TestCase):
-
     def setUp(self):
         self.clear_cache()
         self.user1 = self.create_user("user1", "user1@sample.com")
@@ -101,6 +100,3 @@ class TweetServiceTests(TestCase):
 
         tweets = TweetService.get_cached_tweets(self.user1.id)
         self.assertEqual([t.id for t in tweets], [tweet2.id, tweet1.id])
-
-
-

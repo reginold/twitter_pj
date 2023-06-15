@@ -30,4 +30,5 @@ class NewsFeed(models.Model):
     def cached_tweet(self):
         return MemcachedHelper.get_object_through_cache(Tweet, self.tweet_id)
 
+
 post_save.connect(push_newsfeed_to_cache, sender=NewsFeed)

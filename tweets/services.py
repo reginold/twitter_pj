@@ -3,7 +3,7 @@ from twitter.cache import USER_TWEETS_PATTERN
 from utils.redis_helper import RedisHelper
 
 
-class TweetService(object):
+class TweetService:
     @classmethod
     def create_photos_from_files(cls, tweet, files):
         photos = []

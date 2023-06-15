@@ -24,7 +24,7 @@ def required_params(method="GET", params=None):
                 params_str = ",".join(missing_params)
                 return Response(
                     {
-                        "message": "Missing {} in request".format(params_str),
+                        "message": f"Missing {params_str} in request",
                         "success": False,
                     },
                     status=status.HTTP_400_BAD_REQUEST,

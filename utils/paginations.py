@@ -8,7 +8,7 @@ class EndlessPagination(BasePagination):
     page_size = 20 if not settings.TESTING_MODE else 10
 
     def __init__(self):
-        super(EndlessPagination, self).__init__()
+        super().__init__()
         self.has_next_page = False
 
     def to_html(self):
@@ -35,7 +35,7 @@ class EndlessPagination(BasePagination):
             else:
                 reversed_order_list = []
         self.has_next_page = len(reversed_order_list) > index + self.page_size
-        return reversed_order_list[index: index + self.page_size]
+        return reversed_order_list[index : index + self.page_size]
 
     def paginate_queryset(self, queryset, request, view=None):
         if type(queryset) == list:

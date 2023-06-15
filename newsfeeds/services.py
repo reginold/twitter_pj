@@ -4,7 +4,7 @@ from twitter.cache import USER_NEWSFEEDS_PATTERN
 from utils.redis_helper import RedisHelper
 
 
-class NewsFeedServices(object):
+class NewsFeedServices:
     @classmethod
     def fanout_to_followers(cls, tweet):
         newsfeeds = [
@@ -28,6 +28,8 @@ class NewsFeedServices(object):
     @classmethod
     def push_newsfeed_to_cache(cls, newsfeed):
         # Queryset is lazy loading
-        queryset = NewsFeed.objects.filter(user_id=newsfeed.user_id).order_by("-created_at")
+        queryset = NewsFeed.objects.filter(user_id=newsfeed.user_id).order_by(
+            "-created_at"
+        )
         key = USER_NEWSFEEDS_PATTERN.format(user_id=newsfeed.user_id)
         RedisHelper.push_object(key, newsfeed, queryset)

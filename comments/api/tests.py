@@ -65,7 +65,7 @@ class CommentApiTests(TestCase):
 
     def test_destroy(self):
         comment = self.create_comment(self.user1, self.tweet)
-        url = "{}{}/".format(COMMENT_URL, comment.id)
+        url = f"{COMMENT_URL}{comment.id}/"
 
         # 匿名不可以删除
         response = self.anonymous_client.delete(url)
@@ -84,7 +84,7 @@ class CommentApiTests(TestCase):
     def test_update(self):
         comment = self.create_comment(self.user1, self.tweet, "original")
         another_tweet = self.create_tweet(self.user2)
-        url = "{}{}/".format(COMMENT_URL, comment.id)
+        url = f"{COMMENT_URL}{comment.id}/"
 
         # 使用 put 的情况下
         # 匿名不可以更新

@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from likes.models import Like
 
 
-class LikeService(object):
+class LikeService:
     @classmethod
     def has_liked(cls, user, target):
         if user.is_anonymous:
