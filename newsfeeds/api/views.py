@@ -11,13 +11,16 @@ class NewsFeedViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     pagination_class = EndlessPagination
 
+    def get_queryset(self):
+        # This queryset will not be used, because you're overriding the `list` method,
+        # but it needs to be defined to prevent an AssertionError.
+        return NewsFeed.objects.none()
+
     def list(self, request):
         cached_newsfeeds = NewsFeedServices.get_cached_newsfeeds(request.user.id)
         page = self.paginator.paginate_cached_list(cached_newsfeeds, request)
         if page is None:
             queryset = NewsFeed.objects.filter(user=request.user)
             page = self.paginate_queryset(queryset)
-        serializer = NewsFeedSerializer(
-            page, context={"request": request}, many=True
-        )
+        serializer = NewsFeedSerializer(page, context={"request": request}, many=True)
         return self.get_paginated_response(serializer.data)
