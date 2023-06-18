@@ -44,4 +44,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Automated merge of branch ${GITHUB_REF#refs/heads/} into main
           title: Automated merge of branch ${GITHUB_REF#refs/heads/} into main
-          branch: main
+          base: main
