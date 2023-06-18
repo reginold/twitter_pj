@@ -8,6 +8,7 @@ from likes.services import LikeService
 from tweets.constants import TWEET_PHOTOS_UPLOAD_LIMIT
 from tweets.models import Tweet
 from tweets.services import TweetService
+from utils.redis_helper import RedisHelper
 
 
 class TweetSerializer(serializers.ModelSerializer):
@@ -31,10 +32,14 @@ class TweetSerializer(serializers.ModelSerializer):
         )
 
     def get_likes_count(self, obj):
-        return obj.like_set.count()
+        # select count(*)  -> redis get
+        # N+ 1 Query
+        # N 如果是 db query 是不可以接受的
+        # 但是如果是 redis query, 就可以接受
+        return RedisHelper.get_count(obj, "likes_count")
 
     def get_comments_count(self, obj):
-        return obj.comment_set.count()
+        return RedisHelper.get_count(obj, "comments_count")
 
     def get_has_liked(self, obj):
         return LikeService.has_liked(self.context["request"].user, obj)

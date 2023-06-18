@@ -28,9 +28,7 @@ class NewsFeedApiTests(TestCase):
             follower = self.create_user(f"user2_follower{i}", "user2@gmail.com")
             Friendship.objects.create(from_user=follower, to_user=self.user2)
         for i in range(3):
-            following = self.create_user(
-                f"user2_following{i}", "user2@gmail.com"
-            )
+            following = self.create_user(f"user2_following{i}", "user2@gmail.com")
             Friendship.objects.create(from_user=self.user2, to_user=following)
 
     def test_list(self):

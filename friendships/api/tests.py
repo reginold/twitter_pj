@@ -23,9 +23,7 @@ class FriendshipApiTests(TestCase):
 
         # create followings and followers for dongxie
         for i in range(2):
-            follower = self.create_user(
-                f"dongxie_follower{i}", email="test1@gmail.com"
-            )
+            follower = self.create_user(f"dongxie_follower{i}", email="test1@gmail.com")
             Friendship.objects.create(from_user=follower, to_user=self.dongxie)
         for i in range(3):
             following = self.create_user(

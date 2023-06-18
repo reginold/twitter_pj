@@ -1,4 +1,5 @@
 from utils.listeners import invalidate_object_cache
+from utils.redis_helper import RedisHelper
 
 
 def increase_comments_count(sender, instance, created, **kwargs):
@@ -13,7 +14,7 @@ def increase_comments_count(sender, instance, created, **kwargs):
     Tweet.objects.filter(id=instance.tweet_id).update(
         comments_count=F("comments_count") + 1
     )
-    invalidate_object_cache(Tweet, instance.tweet)
+    RedisHelper.increase_count(instance.tweet, "comments_count")
 
 
 def decrease_comments_count(sender, instance, **kwargs):
@@ -24,4 +25,4 @@ def decrease_comments_count(sender, instance, **kwargs):
     Tweet.objects.filter(id=instance.tweet_id).update(
         comments_count=F("comments_count") - 1
     )
-    invalidate_object_cache(Tweet, instance.tweet)
+    RedisHelper.decrease_count(instance.tweet, "comments_count")
