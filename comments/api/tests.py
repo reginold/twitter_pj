@@ -178,3 +178,37 @@ class CommentApiTests(TestCase):
         response = self.user2_client.get(NEWSFEED_LIST_API)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["results"][0]["tweet"]["comments_count"], 2)
+
+    def test_comments_count_with_cache(self):
+        """test the comments count in tweet detail, tweet list, newsfeed list"""
+        # tweet detail api
+        tweet = self.create_tweet(self.user1)
+        url = TWEET_DETAIL_API.format(tweet.id)
+        response = self.user2_client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["comments_count"], 0)
+
+        # tweet list api
+        self.create_comment(self.user1, tweet)
+        response = self.user2_client.get(TWEET_LIST_API, {"user_id": self.user1.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"][0]["comments_count"], 1)
+
+        # newsfeeds list api
+        self.create_comment(self.user2, tweet)
+        self.create_newsfeed(self.user2, tweet)
+        response = self.user2_client.get(NEWSFEED_LIST_API)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"][0]["tweet"]["comments_count"], 2)
+
+        # cache
+        self.clear_cache()
+        response = self.user2_client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["comments_count"], 2)
+        response = self.user2_client.get(TWEET_LIST_API, {"user_id": self.user1.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"][0]["comments_count"], 2)
+        response = self.user2_client.get(NEWSFEED_LIST_API)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"][0]["tweet"]["comments_count"], 2)

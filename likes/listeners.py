@@ -1,3 +1,6 @@
+from utils.redis_helper import RedisHelper
+
+
 def increase_likes_count(sender, instance, created, **kwargs):
     from django.db.models import F
 
@@ -19,6 +22,7 @@ def increase_likes_count(sender, instance, created, **kwargs):
     # method 1
     tweet = instance.content_object
     Tweet.objects.filter(id=instance.object_id).update(likes_count=F("likes_count") + 1)
+    RedisHelper.increase_count(instance.content_object, "likes_count")
 
     # method 2
     # tweet = instance.content_object
@@ -37,3 +41,4 @@ def decrease_likes_count(sender, instance, **kwargs):
 
     tweet = instance.content_object
     Tweet.objects.filter(id=instance.object_id).update(likes_count=F("likes_count") - 1)
+    RedisHelper.decrease_count(instance.content_object, "likes_count")
