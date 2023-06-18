@@ -26,5 +26,22 @@ jobs:
           sudo apt-get install -y mysql-server gcc libmariadb-dev
           pip install docker-compose
       - name: Run Tests
+        id: test
         run: |
           docker-compose run web sh -c "python3 manage.py wait_for_db && sleep 30s && python3 manage.py migrate && python3 manage.py test"
+      - name: Check Test Results
+        run: |
+          if echo "${{ steps.test.outputs.test_results }}" | grep -q "FAIL"; then
+            echo "Tests failed"
+            exit 1
+          else
+            echo "All tests passed"
+          fi
+      - name: Merge Branch
+        if: success()
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Automated merge of branch ${GITHUB_REF#refs/heads/} into main
+          title: Automated merge of branch ${GITHUB_REF#refs/heads/} into main
+          branch: main
