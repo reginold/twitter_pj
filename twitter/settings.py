@@ -192,6 +192,13 @@ REDIS_KEY_EXPIRE_TIME = 7 * 86400  # in seconds
 # size of limit should be larger than the pagination size
 REDIS_LIST_LENGTH_LIMIT = 200 if not TESTING_MODE else 20
 
+# Celery configuration OPTIONS
+CELERY_BROKER_URL = (
+    "redis://redis:6379/2" if not TESTING_MODE else "redis://redis:6379/0"
+)
+CELERY_TIMEZONE = "UTC"
+CELERY_TASK_ALWAYS_EAGER = TESTING_MODE
+
 try:
     from .local_settings import *
 except:
