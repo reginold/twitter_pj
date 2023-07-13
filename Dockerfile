@@ -1,5 +1,7 @@
 FROM mianasbat/ubuntu1804-py3.6-pip:latest
 ENV PYTHONUNBUFFERED 1
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
 
 RUN apt-get update && \
     apt-get -y install sudo
