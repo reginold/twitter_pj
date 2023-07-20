@@ -12,9 +12,7 @@ class NewsFeedViewSet(viewsets.GenericViewSet):
     pagination_class = EndlessPagination
 
     def get_queryset(self):
-        # This queryset will not be used, because you're overriding the `list` method,
-        # but it needs to be defined to prevent an AssertionError.
-        return NewsFeed.objects.none()
+        return NewsFeed.objects.filter(user=self.request.user)
 
     def list(self, request):
         cached_newsfeeds = NewsFeedServices.get_cached_newsfeeds(request.user.id)
