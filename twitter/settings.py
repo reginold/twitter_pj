@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import sys
 from pathlib import Path
 
+from kombu import Queue
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -198,6 +200,10 @@ CELERY_BROKER_URL = (
 )
 CELERY_TIMEZONE = "UTC"
 CELERY_TASK_ALWAYS_EAGER = TESTING_MODE
+CELERY_QUEUE = (
+    Queue("default", routing_key="default"),
+    Queue("newsfeeds", routing_key="newsfeeds"),
+)
 
 try:
     from .local_settings import *

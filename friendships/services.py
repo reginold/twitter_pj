@@ -19,6 +19,13 @@ class FriendshipService:
         return [friendship.from_user for friendship in friendships]
 
     @classmethod
+    def get_follower_ids(cls, user_id):
+        friendships = Friendship.objects.filter(
+            to_user_id=user_id,
+        )
+        return [friendship.from_user_id for friendship in friendships]
+
+    @classmethod
     def get_following_user_id_set(cls, from_user_id):
         # fetch the cache
         # LRU will be used by release the memory
