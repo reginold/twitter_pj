@@ -5,6 +5,7 @@ from testing.testcases import TestCase
 class UserProfileTests(TestCase):
     def setUp(self):
         self.clear_cache()
+        UserProfile.objects.all().delete()  # Clean up any existing UserProfile objects
 
     def test_profile_property(self):
         user1 = self.create_user("user1", "user1@sample.com")
